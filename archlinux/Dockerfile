@@ -1,8 +1,13 @@
 FROM base/archlinux:latest
-MAINTAINER Davide De Giorgio & Christof Greiner (davide.degiorgio93@gmail.com)
+MAINTAINER Davide De Giorgio & Christof Greiner
 
-# Install all packages and update Archlinux Image
-RUN pacman -Syy --noconfirm git python-pip python2 pypy
+# Setting all Environment-Variables
+ENV HOME  /
+ENV PYENV_ROOT $HOME/.pyenv
+ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+
+# Install all packages and update Ubuntu Image
+RUN pacman -Syy --noconfirm git python-pip python2 pypy openssl
 
 RUN pip install -U pip
 RUN pip install -U tox
