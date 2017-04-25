@@ -3,8 +3,7 @@ MAINTAINER Davide De Giorgio & Christof Greiner (davide.degiorgio93@gmail.com)
 
 # Install all packages and update Fedora Image
 RUN yum -y update
-RUN yum -y install git gcc zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel python-pip \
-    patch make pypy cpio
+RUN yum -y install git python-pip patch make pypy cpio
 
 RUN pip install -U pip
 RUN pip install -U tox
