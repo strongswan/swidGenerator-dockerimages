@@ -2,7 +2,7 @@ FROM base/archlinux:latest
 MAINTAINER Davide De Giorgio & Christof Greiner (davide.degiorgio93@gmail.com)
 
 # Install all packages and update Archlinux Image
-RUN pacman -Syy --noconfirm git python-pip python2 pypy openssl
+RUN pacman -Syyu --noconfirm git python-pip python2 pypy openssl grep file pkgfile curl gzip tar
 
 RUN pip install -U pip
 RUN pip install -U tox
