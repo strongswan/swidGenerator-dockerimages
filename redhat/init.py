@@ -12,7 +12,7 @@ try:
 
     # Read File-List and start Tox testing session
     TEST_FILE_LIST = os.environ['TOX_TEST_FILES']
-    TOX_CMD_ARGS.append(TEST_FILE_LIST)
+    TOX_CMD_ARGS.extend(TEST_FILE_LIST.split(' '))
     subprocess.call(TOX_CMD_ARGS)
 
 except KeyError:
