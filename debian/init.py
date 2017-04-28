@@ -9,7 +9,7 @@ try:
 
     # Install Swid-Generator
     subprocess.call(PIP_CMD_ARGS)
-
+    print(os.environ['TOXENV'])
     # Read File-List and start Tox testing session
     TEST_FILE_LIST = os.environ['TOX_TEST_FILES']
     TOX_CMD_ARGS.extend(TEST_FILE_LIST.split(' '))
