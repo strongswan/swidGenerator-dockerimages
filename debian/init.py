@@ -9,12 +9,15 @@ try:
 
     # Install Swid-Generator
     subprocess.call(PIP_CMD_ARGS)
-    print(os.environ['TOXENV'])
+
     # Read File-List and start Tox testing session
+    TOXENV = os.environ['TOXENV']
     TEST_FILE_LIST = os.environ['TOX_TEST_FILES']
+    TOX_CMD_ARGS.append('-e')
+    TOX_CMD_ARGS.append(TOXENV)
     TOX_CMD_ARGS.extend(TEST_FILE_LIST.split(' '))
     subprocess.call(TOX_CMD_ARGS)
 
 except KeyError:
-    print("Please set ENVIRONMENT VAR 'TOX_TEST_FILES'.")
+    print("Please set ENVIRONMENT VAR 'TOX_TEST_FILES' and 'TOXENV'.")
 
