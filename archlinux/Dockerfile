@@ -2,7 +2,7 @@ FROM base/archlinux:latest
 MAINTAINER Davide De Giorgio & Christof Greiner (davide.degiorgio93@gmail.com)
 
 # Install all packages and update Archlinux Image
-RUN pacman -Syyu --noconfirm git python-pip python2 pypy openssl grep file pkgfile curl gzip tar
+RUN pacman -Syyu --noconfirm git python-pip python2 pypy openssl grep file pkgfile curl gzip tar xmlsec
 
 # Install docker.pkg.tar.xz package for Swid-Generator Test
 COPY docker.pkg.tar.xz /tmp/docker.pkg.tar.xz
