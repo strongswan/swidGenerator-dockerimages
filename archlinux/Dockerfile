@@ -23,14 +23,11 @@ RUN wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz
 RUN wget https://www.python.org/ftp/python/2.6.9/Python-2.6.9.tar.xz
 RUN wget https://www.python.org/ftp/python/3.4.6/Python-3.4.6.tar.xz
 RUN wget https://www.python.org/ftp/python/3.3.6/Python-3.3.6.tar.xz
-RUN wget https://bitbucket.org/squeaky/portable-pypy/downloads/pypy-5.7.1-linux_x86_64-portable.tar.bz2
 
 RUN tar -Jxf Python-2.7.13.tar.xz
 RUN tar -Jxf Python-2.6.9.tar.xz
 RUN tar -Jxf Python-3.4.6.tar.xz
 RUN tar -Jxf Python-3.3.6.tar.xz
-RUN bunzip2 pypy-5.7.1-linux_x86_64-portable.tar.bz2
-RUN tar -xf pypy-5.7.1-linux_x86_64-portable.tar
 
 WORKDIR /home/python/Python-2.7.13
 RUN ./configure && make && make install
