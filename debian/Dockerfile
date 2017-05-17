@@ -38,8 +38,10 @@ RUN pyenv install 2.6.9
 RUN pyenv install 3.4.6
 RUN pyenv install 3.3.6
 RUN pyenv install pypy-5.7.1
+RUN pyenv install 3.5.3
+RUN pyenv install 3.6.1
 
-RUN pyenv global 2.7.13 2.6.9 3.4.6 3.3.6 pypy-5.7.1
+RUN pyenv global 2.7.13 2.6.9 3.4.6 3.3.6 pypy-5.7.1 3.5.3 3.6.1
 
 # Setting /home/swid to working directory, this folder is mapped with Source-Code Folder
 WORKDIR /home/swid
