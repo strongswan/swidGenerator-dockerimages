@@ -23,11 +23,15 @@ RUN wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz
 RUN wget https://www.python.org/ftp/python/2.6.9/Python-2.6.9.tar.xz
 RUN wget https://www.python.org/ftp/python/3.4.6/Python-3.4.6.tar.xz
 RUN wget https://www.python.org/ftp/python/3.3.6/Python-3.3.6.tar.xz
+RUN wget https://www.python.org/ftp/python/3.5.3/Python-3.5.3.tar.xz
+RUN wget https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz
 
 RUN tar -Jxf Python-2.7.13.tar.xz
 RUN tar -Jxf Python-2.6.9.tar.xz
 RUN tar -Jxf Python-3.4.6.tar.xz
 RUN tar -Jxf Python-3.3.6.tar.xz
+RUN tar -Jxf Python-3.5.3.tar.xz
+RUN tar -Jxf Python-3.6.1.tar.xz
 
 WORKDIR /home/python/Python-2.7.13
 RUN ./configure && make && make install
@@ -40,6 +44,13 @@ RUN ./configure && make && make install
 
 WORKDIR /home/python/Python-3.3.6
 RUN ./configure && make && make install
+
+WORKDIR /home/python/Python-3.5.3
+RUN ./configure && make && make install
+
+WORKDIR /home/python/Python-3.6.1
+RUN ./configure && make && make install
+
 
 # Setting /home/swid to working direcotry, this folder is mapped with Source-Code Folder
 WORKDIR /home/swid
