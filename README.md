@@ -78,6 +78,8 @@ except KeyError:
 - Python 2.6.9
 - Python 2.7.13
 - Python 3.3.6
+- Python 3.5.3
+- Python 3.6.1
 - PyPy-5.7.1
 
 # Working-Directory
