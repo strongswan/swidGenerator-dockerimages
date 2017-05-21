@@ -87,3 +87,6 @@ except KeyError:
 ```
 /home/swid
 ```
+
+# Locales settings
+On each container the locales settings were set to "en_US.UTF-8". This because of UTF-8 compatibility of the console stdout.
