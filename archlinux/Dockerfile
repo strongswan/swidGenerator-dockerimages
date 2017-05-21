@@ -51,6 +51,10 @@ RUN ./configure && make && make install
 WORKDIR /home/python/Python-3.6.1
 RUN ./configure && make && make install
 
+# Setting locales
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+RUN locale-gen
+ENV LANG en_US.UTF-8
 
 # Setting /home/swid to working direcotry, this folder is mapped with Source-Code Folder
 WORKDIR /home/swid

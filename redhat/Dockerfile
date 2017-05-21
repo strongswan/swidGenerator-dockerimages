@@ -34,6 +34,8 @@ RUN pyenv install 3.6.1
 
 RUN pyenv global 2.7.13 2.6.9 3.4.6 3.3.6 pypy-5.7.1 3.5.3 3.6.1
 
+ENV LANG en_US.UTF-8
+
 # Setting /home/swid to working direcotry, this folder is mapped with Source-Code Folder
 WORKDIR /home/swid
 
