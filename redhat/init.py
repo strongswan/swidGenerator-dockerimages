@@ -1,5 +1,6 @@
 # INIT SCRIPT for Docker
 import os
+import sys
 import subprocess
 
 TOX_CMD_ARGS = ['tox', '-c', 'tox_integration.ini']
@@ -16,7 +17,8 @@ try:
     TOX_CMD_ARGS.append('-e')
     TOX_CMD_ARGS.append(TOXENV)
     TOX_CMD_ARGS.extend(TEST_FILE_LIST.split(' '))
-    subprocess.call(TOX_CMD_ARGS)
+    return_code = subprocess.call(TOX_CMD_ARGS)
+    sys.exit(return_code)
 
 except KeyError:
     print("Please set ENVIRONMENT VAR 'TOX_TEST_FILES' and 'TOXENV'.")
