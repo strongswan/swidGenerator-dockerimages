@@ -1,55 +1,57 @@
-FROM base/archlinux:latest
+FROM base/archlinux
 MAINTAINER Davide De Giorgio & Christof Greiner
 
 # Install all packages and update Archlinux Image
-RUN pacman -Syyu --noconfirm git python-pip python2 pypy openssl grep file pkgfile curl gzip tar xmlsec
+RUN pacman -Syyu
+RUN pacman -Sy --noconfirm git
+RUN pacman -Sy --noconfirm python-pip
+RUN pacman -Sy --noconfirm python2
+RUN pacman -Sy --noconfirm pypy
+RUN pacman -Sy --noconfirm gzip
+RUN pacman -Sy --noconfirm tar
+RUN pacman -Sy --noconfirm xmlsec
+RUN pacman -Sy --noconfirm sed
+RUN pacman -Sy --noconfirm sudo
+RUN pacman -Sy --noconfirm gksu
+RUN pacman -Sy --noconfirm awk
+RUN pacman -Sy --noconfirm base-devel
 
 # Install docker.pkg.tar.xz package for Swid-Generator Test
 COPY docker.pkg.tar.xz /tmp/docker.pkg.tar.xz
 RUN pacman -U --noconfirm /tmp/docker.pkg.tar.xz
 
+# COPY init-script to /tmp/ folder
 COPY init.py /tmp/init.py
 RUN chmod 777 /tmp/init.py
 
+# Install needed programs for test-execution
 RUN pip install -U pip
 RUN pip install -U tox
 RUN pip install -U pytest
 
-RUN pacman -Syyu --noconfirm sed base-devel openssl wget
+# Add user for installing python-versions
+RUN useradd -m -G root -s /bin/bash yaourt
+RUN echo "yaourt ALL=(ALL) ALL" >> /etc/sudoers
+RUN echo "%yaourt ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-WORKDIR /home/python
+# Needed to install yaourt from pacman
+# Archlinuxfr repository added
+RUN echo "[archlinuxfr]" >> /etc/pacman.conf
+RUN echo "SigLevel = Never" >> /etc/pacman.conf
+RUN echo "Server = http://repo.archlinux.fr/\$arch" >> /etc/pacman.conf
 
-RUN wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz
-RUN wget https://www.python.org/ftp/python/2.6.9/Python-2.6.9.tar.xz
-RUN wget https://www.python.org/ftp/python/3.4.6/Python-3.4.6.tar.xz
-RUN wget https://www.python.org/ftp/python/3.3.6/Python-3.3.6.tar.xz
-RUN wget https://www.python.org/ftp/python/3.5.3/Python-3.5.3.tar.xz
-RUN wget https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz
+RUN pacman -Sy --noconfirm yaourt
 
-RUN tar -Jxf Python-2.7.13.tar.xz
-RUN tar -Jxf Python-2.6.9.tar.xz
-RUN tar -Jxf Python-3.4.6.tar.xz
-RUN tar -Jxf Python-3.3.6.tar.xz
-RUN tar -Jxf Python-3.5.3.tar.xz
-RUN tar -Jxf Python-3.6.1.tar.xz
-
-WORKDIR /home/python/Python-2.7.13
-RUN ./configure && make && make install
-
-WORKDIR /home/python/Python-2.6.9
-RUN ./configure && make && make install
-
-WORKDIR /home/python/Python-3.4.6
-RUN ./configure && make && make install
-
-WORKDIR /home/python/Python-3.3.6
-RUN ./configure && make && make install
-
-WORKDIR /home/python/Python-3.5.3
-RUN ./configure && make && make install
-
-WORKDIR /home/python/Python-3.6.1
-RUN ./configure && make && make install
+# for installing python versions yaourt is used
+# This because of pyenv-error
+# https://github.com/pyenv/pyenv/wiki/Common-build-problems
+# ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?
+# yaourt downloads the python source from AUR (Arch Linux User Repository)
+RUN su yaourt -c "yaourt -Sy python30 --noconfirm"
+RUN su yaourt -c "yaourt -Sy python32 --noconfirm"
+RUN su yaourt -c "yaourt -Sy python33 --m-arg --skippgpcheck --m-arg --skipinteg --m-arg --nocheck --noconfirm"
+RUN su yaourt -c "yaourt -Sy python34 --noconfirm"
+RUN su yaourt -c "yaourt -Sy python35 --noconfirm"
 
 # Setting locales
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
@@ -61,4 +63,3 @@ WORKDIR /home/swid
 
 # Install Swid-Generator
 CMD python /tmp/init.py
-
