@@ -27,7 +27,7 @@ If the docker-container is started without command, the init.py script starts.
 
 ### Init.py
 
-```
+```python
 # INIT SCRIPT for Docker
 import os
 import sys
