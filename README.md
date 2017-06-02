@@ -1,29 +1,29 @@
-# swidGenerator-Dockerimages
+# swidGenerator-dockerimages
 
-This Docker-Images are used to test the strongSwan swidGenerator.
-For each kind of distribution (Debian, Redhat and Archlinux) a Dockerfile created.
+These Docker images are used to test the strongSwan [swidGenerator](https://github.com/strongswan/swidGenerator).
+For each kind of supported distribution (Debian, Fedora and Arch Linux) a Dockerfile is provided.
 
-To build the Dockerimage locally, please use the following command (Execution in the folder, where the Dockerfile is placed):
+To build the images locally, please use the following command (execution in the folder, where the Dockerfile is placed):
 
 ```
-docker build -t <Name_for_the_image>:<tag> .
+docker build -t <name_for_the_image>:<tag> .
 ```
 
 ## Usage
 ```
-docker run -it --rm -e "TOX_TEST_FILES=<path_to_test_file>" -e "TOXENV=<python_version> -v <local_source_folder_path>:<docker_destination_path> <image>
+docker run -it --rm -e "TOX_TEST_FILES=<path_to_test_file>" -e "TOXENV=<python_version> -v <local_source_folder_path>:/swid <image>
 ```
 
 ### Environment variables
 * TOX_TEST_FILES = Whitespace separated list of the files, which must be tested (e.g: test_integration.py test_swid.py)
-* TOXENV = The base Python Version for the tests. Possible choices: py26, py27, py33, py34, py35, py36, pypy
+* TOXENV = The base Python version for the tests. Possible choices: py27, py34, py35, py36, py37, pypy
 
 ## Startup
-If the docker-container is started without command, the init.py script starts.
+If the Docker container is started without command, the init.py script starts.
 
 ### Startup procedure
-* Install the swid_generator locally on the docker. (pip install -e .)
-* Run the tox command for the the files passed as environment-variables and the specific python_version.
+* Install the swidGenerator in the container (pip install -e .)
+* Run the tox command for the the files passed as environment variables and the specific Python version.
 
 ### Init.py
 
@@ -53,39 +53,6 @@ try:
 except KeyError:
     print("Please set ENVIRONMENT VAR 'TOX_TEST_FILES' and 'TOXENV'.")
 ```
-
-## Installed packages (Debian)
-- python
-- git
-- tox
-- pip
-- pytest
-- signxml
-- pyenv (to manage interpreters on container)
-
-## Installed packages (redhat)
-- python
-- git
-- tox
-- pytest
-- cpio
-- signxml
-- pyenv (to manage interpreters on container)
-
-## Installed packages (archlinux)
-- pip
-- tox
-- pytest
-- signxml
-- All Python Versions installed manually from AUR.
-
-## Python Versions (on each container)
-- Python 2.6.9
-- Python 2.7.13
-- Python 3.3.6
-- Python 3.5.3
-- Python 3.6.1
-- PyPy-5.7.1
 
 # Working-Directory
 
