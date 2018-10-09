@@ -1,60 +1,55 @@
-FROM ubuntu:latest
-MAINTAINER Davide De Giorgio & Christof Greiner
+FROM debian:stretch
 
-# Install all packages and update Ubuntu Image
-RUN apt-get -y update
-RUN apt-get -y install git make build-essential pypy git python-dev python-pip python3-pip wget
+# Install all packages and update image (libssl1.0-dev is only needed for
+# Python 3.4.x)
+RUN apt-get -y update && apt-get -y install \
+	build-essential \
+	git \
+	libbz2-dev \
+	libffi-dev \
+	libreadline-dev \
+	libsqlite3-dev \
+	libssl1.0-dev \
+	locales \
+	python-pip \
+	python3-pip \
+	wget \
+	xmlsec1 \
+	zlib1g-dev \
+	&& apt-get -y clean
 
-# Install libicu55 dependency for xmlsec1 installation
-RUN wget http://security.ubuntu.com/ubuntu/pool/main/i/icu/libicu55_55.1-7ubuntu0.2_amd64.deb
-RUN dpkg -i libicu55_55.1-7ubuntu0.2_amd64.deb
-
-RUN apt-get -y install xmlsec1 libssl-dev libffi-dev
-
-# Install docker.deb package for Swid-Generator Test
-COPY docker.deb /tmp/docker.deb
-RUN dpkg -i --ignore-depends=libglib2.0-0  /tmp/docker.deb
-
-# Copy init-scirpt
-COPY init.py /tmp/init.py
-RUN chmod 777 /tmp/init.py
-
-# Install all dependencies for testenvironment
-RUN pip install -U pip
-RUN pip install -U tox
-RUN pip install -U pytest
-RUN pip install -U signxml
-RUN pip3 install -U signxml
-
-# Install 'pyenv' for Python-Version management
+# Install 'pyenv' for Python version management
 RUN git clone https://github.com/pyenv/pyenv.git /home/pyenv/.pyenv
 
 ENV HOME /home/pyenv
 ENV PYENV_ROOT $HOME/.pyenv
 ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 
-RUN pyenv install 2.7.13
-RUN pyenv install 2.6.9
-RUN pyenv install 3.4.6
-RUN pyenv install 3.3.6
-RUN pyenv install pypy-5.7.1
-RUN pyenv install 3.5.3
-RUN pyenv install 3.6.1
+# Not installed are Python 2.7 and 3.5, which are currently in the base image
+RUN pyenv install 3.4.9 && \
+	pyenv install 3.6.6 && \
+	pyenv install 3.7.0 && \
+	pyenv install pypy-5.7.1 && \
+	pyenv global 3.4.9 3.6.6 3.7.0 pypy-5.7.1
 
-RUN pyenv global 2.7.13 2.6.9 3.4.6 3.3.6 pypy-5.7.1 3.5.3 3.6.1
+# Install needed programs for test execution
+RUN pip install -U \
+	pip \
+	pytest \
+	tox
 
-RUN apt-get -y install -f
-RUN apt-get -y install locales
-RUN locale-gen en_US.UTF-8
-RUN update-locale LANG=en_US.UTF-8
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+	locale-gen
 ENV LANG en_US.UTF-8
 
-# Setting /home/swid to working directory, this folder is mapped with Source-Code Folder
+# Install docker.deb package for swidGenerator test
+COPY docker.deb /tmp/docker.deb
+RUN dpkg -i --ignore-depends=libglib2.0-0  /tmp/docker.deb
+
+COPY init.py /tmp/init.py
+RUN chmod 777 /tmp/init.py
+
+# This folder will be mapped to the source folder
 WORKDIR /home/swid
 
-# Install Swid-Generator
 CMD python /tmp/init.py
-
-
-
-
