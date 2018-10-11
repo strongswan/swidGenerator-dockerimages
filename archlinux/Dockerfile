@@ -1,30 +1,31 @@
 FROM archimg/base
 
-# Use all cores for package builds and don't compress built packages
-RUN sed -i 's,#MAKEFLAGS="-j2",MAKEFLAGS="-j$(nproc)",g' /etc/makepkg.conf && \
-	sed -i "s,PKGEXT='.pkg.tar.xz',PKGEXT='.pkg.tar',g" /etc/makepkg.conf
-
-# Install packages and update Arch Linux image. The yay utility (requires a user
-# for non-root installation) is used to install Python versions from AUR. That's
-# because pyenv fails with different errors (depending on the Python version)
+# Install packages and update Arch Linux image (openssl-1.0 is only needed for
+# Python 3.4.x)
 RUN pacman -Syyu --noconfirm && pacman -Sy --noconfirm \
 	base-devel \
 	git \
+	openssl-1.0 \
 	pypy \
 	python-pip \
 	python2 \
 	xmlsec \
-	&& useradd -m yay && \
-	echo "yay:" | chpasswd -e && \
-	echo "yay ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-	su yay -c "cd && git clone https://aur.archlinux.org/yay.git" && \
-	su yay -c "cd ~/yay && makepkg -si --noconfirm" && \
-	su yay -c "yay -Sy python34 --noconfirm" && \
-	su yay -c "yay -Sy python35 --noconfirm" && \
-	su yay -c "yay -Sy python36 --noconfirm" && \
-	rm -rf /home/yay && \
-	pacman -Rns --noconfirm $(pacman -Qttdq) && \
-	rm /var/cache/pacman/pkg/*
+	&& rm /var/cache/pacman/pkg/*
+
+# Install 'pyenv' for Python version management
+RUN git clone https://github.com/pyenv/pyenv.git /home/pyenv/.pyenv
+
+ENV HOME /home/pyenv
+ENV PYENV_ROOT $HOME/.pyenv
+ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+
+# Not installed are Python 2.7 and 3.7, which are currently in the base image
+RUN LDFLAGS="-L/usr/lib/openssl-1.0" \
+	CFLAGS="-I/usr/include/openssl-1.0" \
+	pyenv install 3.4.9 && \
+	pyenv install 3.5.6 && \
+	pyenv install 3.6.6 && \
+	pyenv global 3.4.9 3.5.6 3.6.6
 
 # Install needed programs for test execution
 RUN pip install -U \
