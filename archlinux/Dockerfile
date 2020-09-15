@@ -1,4 +1,4 @@
-FROM archimg/base
+FROM archlinux/base
 
 # Use all cores for package builds and don't compress built packages
 RUN sed -i 's,#MAKEFLAGS="-j2",MAKEFLAGS="-j$(nproc)",g' /etc/makepkg.conf && \
@@ -7,24 +7,27 @@ RUN sed -i 's,#MAKEFLAGS="-j2",MAKEFLAGS="-j$(nproc)",g' /etc/makepkg.conf && \
 # Install packages and update Arch Linux image. The yay utility (requires a user
 # for non-root installation) is used to install Python versions from AUR. That's
 # because pyenv fails with different errors (depending on the Python version)
+# Seems the default GPG key servers don't have the key for Python 3.5 anymore.
 RUN pacman -Syyu --noconfirm && pacman -Sy --noconfirm \
 	base-devel \
 	git \
-	pypy \
+	pypy3 \
 	python-pip \
 	python2 \
 	xmlsec \
 	&& useradd -m yay && \
 	echo "yay:" | chpasswd -e && \
 	echo "yay ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+	su yay -c "mkdir ~/.gnupg && chmod 700 ~/.gnupg" && \
+	su yay -c "echo 'keyserver hkp://pool.sks-keyservers.net' >> ~/.gnupg/dirmngr.conf" && \
 	su yay -c "cd && git clone https://aur.archlinux.org/yay.git" && \
 	su yay -c "cd ~/yay && makepkg -si --noconfirm" && \
-	su yay -c "yay -Sy python34 --noconfirm" && \
 	su yay -c "yay -Sy python35 --noconfirm" && \
 	su yay -c "yay -Sy python36 --noconfirm" && \
+	su yay -c "yay -Sy python37 --noconfirm" && \
 	rm -rf /home/yay && \
 	pacman -Rns --noconfirm $(pacman -Qttdq) && \
-	rm /var/cache/pacman/pkg/*
+	rm -rf /var/cache/pacman/pkg/*
 
 # Install needed programs for test execution
 RUN pip install -U \

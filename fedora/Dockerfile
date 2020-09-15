@@ -1,11 +1,9 @@
-FROM fedora:28
+FROM fedora:30
 
-# Install all packages and update image (compat-openssl10-devel is only needed
-# for Python 3.4.x)
+# Install all packages and update image
 RUN dnf -y update && dnf -y install --allowerasing \
 	bzip2 \
 	bzip2-devel \
-	compat-openssl10-devel \
 	cpio \
 	curl \
 	findutils \
@@ -13,6 +11,7 @@ RUN dnf -y update && dnf -y install --allowerasing \
 	git \
 	libffi-devel \
 	make \
+	openssl-devel \
 	patch \
 	pypy \
 	python-pip \
@@ -30,12 +29,12 @@ ENV HOME /home/pyenv
 ENV PYENV_ROOT $HOME/.pyenv
 ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 
-# Not installed are Python 2.7 and 3.6, which are currently in the base image
-RUN pyenv install 3.4.9 && \
-	pyenv install 3.5.6 && \
-	pyenv install 3.7.0 && \
-	pyenv install pypy-5.7.1 && \
-	pyenv global 3.4.9 3.5.6 3.7.0 pypy-5.7.1
+# Not installed are Python 2.7 and 3.7, which are currently in the base image
+RUN pyenv install 3.5.10 && \
+	pyenv install 3.6.12 && \
+	pyenv install 3.8.5 && \
+	pyenv install pypy3.6-7.3.1 && \
+	pyenv global 3.5.10 3.6.12 3.8.5 pypy3.6-7.3.1
 
 # Install needed programs for test execution
 RUN pip install -U \
