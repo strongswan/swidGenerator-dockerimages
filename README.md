@@ -16,7 +16,7 @@ docker run -it --rm -e "TOX_TEST_FILES=<path_to_test_file>" -e "TOXENV=<python_v
 
 ### Environment variables
 * TOX_TEST_FILES = Whitespace separated list of the files, which must be tested (e.g: test_integration.py test_swid.py)
-* TOXENV = The base Python version for the tests. Possible choices: py27, py34, py35, py36, py37, pypy
+* TOXENV = The base Python version for the tests. Possible choices: py27, py36, py37, py38, py39, pypy
 
 ## Startup
 If the Docker container is started without command, the init.py script starts.

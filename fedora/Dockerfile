@@ -13,8 +13,6 @@ RUN dnf -y update && dnf -y install --allowerasing \
 	make \
 	openssl-devel \
 	patch \
-	pypy \
-	python-pip \
 	readline-devel \
 	sqlite-devel \
 	xmlsec1-openssl \
@@ -30,11 +28,12 @@ ENV PYENV_ROOT $HOME/.pyenv
 ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 
 # Not installed are Python 2.7 and 3.7, which are currently in the base image
-RUN pyenv install 3.5.10 && \
-	pyenv install 3.6.12 && \
-	pyenv install 3.8.5 && \
-	pyenv install pypy3.6-7.3.1 && \
-	pyenv global 3.5.10 3.6.12 3.8.5 pypy3.6-7.3.1
+# pypy3.6 is used to not conflict with 3.7 in the image
+RUN pyenv install 3.6.14 && \
+	pyenv install 3.8.11 && \
+	pyenv install 3.9.6 && \
+	pyenv install pypy3.6-7.3.3 && \
+	pyenv global 3.6.14 3.8.11 3.9.6 pypy3.6-7.3.3
 
 # Install needed programs for test execution
 RUN pip install -U \
